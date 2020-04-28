@@ -11,5 +11,7 @@ blocks:
         - name: Build
           commands:
             - checkout
+            - source /opt/change-java-version.sh
+            - change-java-version 13
             - sem-version java 13
             - mvn -B package --file pom.xml -e
