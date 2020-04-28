@@ -56,6 +56,6 @@ public class CommandsStoreImpl implements CommandsStore, Callable<Integer> {
     @Override
     public Integer call() {
         getAllCommands().forEach(e -> e.usage(System.out));
-        return 0;
+        return CommandExecutionCode.OK.getCode();
     }
 }

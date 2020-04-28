@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import picocli.CommandLine;
 import ua.edu.sumdu.controller.commands.CommandsStore;
+import ua.edu.sumdu.controller.commands.CommandExecutionCode;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -35,8 +36,8 @@ public class App implements CommandLineRunner {
         Scanner scanner = new Scanner(System.in);
         commandsStore.getCommand("help").execute();
         String splitRegex = " ";
-        //noinspection InfiniteLoopStatement
-        while (true) {
+        CommandExecutionCode executionCode = CommandExecutionCode.OK;
+        while (executionCode != CommandExecutionCode.EXIT) {
             String input = scanner.nextLine();
             LOGGER.debug("User input command: " + input);
             if (StringUtils.isBlank(input)) {
@@ -51,7 +52,7 @@ public class App implements CommandLineRunner {
                 if (commandLine == null) {
                     LOGGER.error("Unknown command: " + cmd);
                 } else {
-                    int executionCode = commandLine.execute(cmdArgs);
+                    executionCode = CommandExecutionCode.from(commandLine.execute(cmdArgs));
                     LOGGER.info("Command: " + input + System.lineSeparator() + "Execution code: " + executionCode);
                 }
             } catch (Throwable t) {
@@ -59,5 +60,6 @@ public class App implements CommandLineRunner {
                 commandsStore.getCommand("help").execute();
             }
         }
+        LOGGER.debug("Shutting down");
     }
 }

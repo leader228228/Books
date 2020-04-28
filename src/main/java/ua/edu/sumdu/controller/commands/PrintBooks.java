@@ -10,6 +10,8 @@ import ua.edu.sumdu.controller.SearchBy;
 import ua.edu.sumdu.model.BookRepository;
 import ua.edu.sumdu.model.entity.Book;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.concurrent.Callable;
@@ -64,7 +66,7 @@ public class PrintBooks implements Callable<Integer> {
             default:
                 String errMsg = "Unexpected exception, searchBy parameter is not specified: " + this;
                 LOGGER.error(errMsg);
-                throw new RuntimeException(errMsg);
+                throw new UncheckedIOException(new IOException(errMsg));
         }
         LOGGER.debug(resultSet.size() + " books found");
         return resultSet;
@@ -74,6 +76,6 @@ public class PrintBooks implements Callable<Integer> {
     public Integer call() {
         System.out.println("Books:");
         executeSearch().forEach(System.out::println);
-        return 0;
+        return CommandExecutionCode.OK.getCode();
     }
 }

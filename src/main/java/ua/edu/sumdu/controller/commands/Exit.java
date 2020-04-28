@@ -14,7 +14,6 @@ public class Exit implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        System.exit(0);
-        return 0;
+        return CommandExecutionCode.EXIT.getCode();
     }
 }
