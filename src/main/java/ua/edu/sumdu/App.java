@@ -40,7 +40,7 @@ public class App implements CommandLineRunner {
             String input = scanner.nextLine();
             LOGGER.debug("User input command: " + input);
             if (StringUtils.isBlank(input)) {
-                LOGGER.debug("Blank input: " + input);
+                LOGGER.error("Blank input: " + input);
                 continue;
             }
             try {
@@ -49,7 +49,7 @@ public class App implements CommandLineRunner {
                 String [] cmdArgs = Arrays.copyOfRange(splitInput, 1, splitInput.length);
                 CommandLine commandLine = commandsStore.getCommand(cmd);
                 if (commandLine == null) {
-                    LOGGER.debug("Unknown command: " + cmd);
+                    LOGGER.error("Unknown command: " + cmd);
                 } else {
                     int executionCode = commandLine.execute(cmdArgs);
                     LOGGER.info("Command: " + input + System.lineSeparator() + "Execution code: " + executionCode);
