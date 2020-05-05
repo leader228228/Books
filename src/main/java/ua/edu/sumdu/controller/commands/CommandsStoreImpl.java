@@ -6,6 +6,7 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.sql.Date;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -29,7 +30,7 @@ public class CommandsStoreImpl implements CommandsStore, Callable<Integer> {
         Set<String> names = new HashSet<>(Arrays.asList(commandAnnotation.aliases()));
         names.add(commandAnnotation.name());
         CommandLine commandLine =
-            new CommandLine(command)
+            registerConverters(new CommandLine(command))
             .setCaseInsensitiveEnumValuesAllowed(true);
         names.forEach(
             e -> {
@@ -57,5 +58,10 @@ public class CommandsStoreImpl implements CommandsStore, Callable<Integer> {
     public Integer call() {
         getAllCommands().forEach(e -> e.usage(System.out));
         return CommandExecutionCode.OK.getCode();
+    }
+
+    private CommandLine registerConverters(CommandLine commandLine) {
+        commandLine.registerConverter(Date.class, Date::valueOf);
+        return commandLine;
     }
 }
